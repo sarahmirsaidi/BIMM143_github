@@ -1,11 +1,11 @@
 # BIMM143
 My classwork from [BIMM 143 SP25](https://bioboot.github.io/bimm143_S25/) at UC San Diego
 
-- 01 [PDF, Welcome to Bioinformatics]()
+- 01 [PDF, Welcome to Bioinformatics](Lab 1 Handout - Sarah Mirsaidi Madjdabadi (BIMM 143).pdf)
 
-- 02 [PDF, Sequence alignment fundamentals, algorithms and applications]()
+- 02 [PDF, Sequence alignment fundamentals, algorithms and applications](Lab 02 - Sarah Mirsaidi Madjdabadi (BIMM 143).pdf)
 
-- 03 [PDF, (Project) Find a Gene Assignment Part 1]()
+- 03 [PDF, (Project) Find a Gene Assignment Part 1](Lab 3 Handout - Sarah Mirsaidi Madjdabadi (BIMM 143).pdf)
 
 - 04 [Intro to R](class04/class04.md)
 
@@ -37,4 +37,4 @@ My classwork from [BIMM 143 SP25](https://bioboot.github.io/bimm143_S25/) at UC 
 
 - 18 [Mini Project: Investigating Pertussis Resurgence](class18/class18.md)
 
-- 19 [PDF, Mini Project: Cancer Mutation Analysis]()
+- 19 [PDF, Mini Project: Cancer Mutation Analysis](lab19.pdf)
