@@ -1,0 +1,22 @@
+---
+title: "Class 17: HW"
+author: "Sarah Mirsaidi Madjdabadi, A16890186"
+format: html
+toc: true 
+---
+
+## Downstream analysis
+
+```{r}
+library(tximport)
+library(rhdf5)
+
+# setup the folder and filenames to read
+folders <- dir(pattern="SRR21568*")
+samples <- sub("_quant", "", folders)
+files <- file.path( folders, "abundance.tsv" )
+names(files) <- samples
+
+txi.kallisto <- tximport(files, type = "kallisto", txOut = TRUE)
+```
+
