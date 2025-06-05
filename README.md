@@ -7,9 +7,9 @@ My classwork from [BIMM 143 SP25](https://bioboot.github.io/bimm143_S25/) at UC 
 
 - 03 [PDF, (Project) Find a Gene Assignment Part 1]()
 
-- 04 [Intro to R](https://github.com/sarahmirsaidi/BIMM143_github/blob/main/class04/class04.md)
+- 04 [Intro to R](class04/class04.md)
 
-- 05 [Advanced graphics with **ggplot2**](https://github.com/sarahmirsaidi/BIMM143_github/blob/main/class05/class05.md)
+- 05 [Advanced graphics with **ggplot2**](class05/class05.md)
 
 - 06 [R functions](class06/class06.md)
   
