@@ -1,7 +1,13 @@
 # BIMM143
 My classwork from [BIMM 143 SP25](https://bioboot.github.io/bimm143_S25/) at UC San Diego
 
-- 04 Intro to R
+- 01 [PDF, Welcome to Bioinformatics]()
+
+- 02 [PDF, Sequence alignment fundamentals, algorithms and applications]()
+
+- 03 [PDF, (Project) Find a Gene Assignment Part 1]()
+
+- 04 [Intro to R](https://github.com/sarahmirsaidi/BIMM143_github/blob/main/class04/class04.md)
 
 - 05 [Advanced graphics with **ggplot2**](https://github.com/sarahmirsaidi/BIMM143_github/blob/main/class05/class05.md)
 
@@ -31,4 +37,4 @@ My classwork from [BIMM 143 SP25](https://bioboot.github.io/bimm143_S25/) at UC 
 
 - 18 [Mini Project: Investigating Pertussis Resurgence](https://github.com/sarahmirsaidi/BIMM143_github/blob/main/class18/class18.md)
 
-- 19 Mini Project: Cancer Mutation Analysis
+- 19 [PDF, Mini Project: Cancer Mutation Analysis]()
