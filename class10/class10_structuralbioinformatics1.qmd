@@ -3,6 +3,7 @@ title: "Class 10: Structural Bioinformatics (Part 1)"
 author: "Sarah Mirsaidi Madjdabadi"
 format: html
 toc: true
+prefer-html: true
 ---
 
 ## Introduction to the RCSB Protein Data Bank (PDB)
