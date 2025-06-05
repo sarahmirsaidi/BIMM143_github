@@ -1,0 +1,234 @@
+---
+title: "Class 14: RNASeq mini-project"
+author: "Sarah Mirsaidi Madjdabadi, A16890186"
+format: pdf
+toc: true
+---
+
+Here we will perform a complete RNASeq analysis from counts to pathways and biological interpretation.
+
+The data for for hands-on session comes from GEO entry: GSE37704, which is associated with the following publication:
+
+Trapnell C, Hendrickson DG, Sauvageau M, Goff L et al. "Differential analysis of gene regulation at transcript resolution with RNA-seq". Nat Biotechnol 2013 Jan;31(1):46-53. PMID: 23222703
+
+The authors report on differential analysis of lung fibroblasts in response to loss of the developmental transcription factor HOXA1.
+
+```{r, message=FALSE}
+library(DESeq2)
+library(AnnotationDbi)
+library(org.Hs.eg.db)
+library(pathview)
+library(gage)
+library(gageData)
+```
+
+# Data Import
+
+```{r}
+colData <- read.csv("GSE37704_metadata.csv", row.names = 1)
+countData <- read.csv("GSE37704_featurecounts.csv", row.names = 1)
+```
+
+```{r}
+head(colData)
+```
+
+```{r}
+head(countData)
+```
+
+# Tidy counts to match metadata
+
+Check correspondence between colData rows and countData columns.
+```{r}
+rownames(colData)
+```
+
+```{r}
+colnames(countData)
+```
+
+Remove the troublesome first column so we match the metadata
+```{r}
+counts <- countData[,-1]
+head(counts)
+```
+
+```{r}
+all( rownames(colData) == colnames(counts) )
+```
+
+# Remove zero count genes
+
+We will have rows in `counts` for genes that we can not say anything about because they have zero expression in the particular tissue we are looking at.
+
+```{r}
+head(counts)
+```
+
+
+If the `rowSums()` is zero then a given gene (i.e. row) has no count data and we should exclude these genes from further consideration.
+
+```{r}
+to.keep <- rowSums(counts) != 0
+cleancounts <- counts[to.keep, ]
+```
+
+> Q. How many genes do we have left?
+
+```{r}
+nrow(cleancounts)
+```
+
+# Setup DESeq object for analysis
+
+```{r}
+dds <- DESeqDataSetFromMatrix(countData = cleancounts,
+                              colData = colData,
+                              design = ~condition)
+```
+
+# Run DESeq analysis
+
+```{r}
+dds <- DESeq(dds)
+```
+
+# Extract the results
+
+```{r}
+res <- results(dds)
+head(res)
+```
+
+# Add Gene annotation
+
+```{r}
+columns(org.Hs.eg.db)
+```
+
+```{r}
+res$symbol <- mapIds(x = org.Hs.eg.db, 
+       keys = rownames(res),
+       keytype = "ENSEMBL",
+       column = "SYMBOL")
+
+head(res)
+```
+```{r}
+res$name <- mapIds(x = org.Hs.eg.db, 
+       keys = rownames(res),
+       keytype = "ENSEMBL",
+       column = "GENENAME")
+
+res$entrez <- mapIds(x = org.Hs.eg.db, 
+       keys = rownames(res),
+       keytype = "ENSEMBL",
+       column = "ENTREZID")
+
+head(res)
+```
+
+# Save my results to a CSV file
+
+```{r}
+write.csv(res, file="results.csv")
+```
+
+# Result visualization
+
+```{r}
+mycols <- rep("gray", nrow(res))
+mycols[ res$log2FoldChange <= -2 ] <- "blue"
+mycols[ res$log2FoldChange >= 2 ] <- "blue"
+mycols[ res$padj >=0.5 ] <- "gray"
+
+plot(res$log2FoldChange, -log(res$padj), col=mycols) +
+abline(v=-2, col="red")
+abline(v=+2, col="red")
+abline(h=-log(0.05), col="red")
+```
+
+```{r}
+library(ggplot2)
+
+ggplot(as.data.frame(res)) +
+  aes(res$log2FoldChange, -log(res$padj)) +
+        geom_point(col=mycols) +
+  geom_vline(xintercept = c(-2, +2)) +
+  geom_hline(yintercept = -log(0.05)) +
+  theme_bw() +
+  labs(x="Log2 Fold-Change", y="-log(Adjusted P-value)")
+```
+
+# Pathway analysis
+
+```{r}
+data(kegg.sets.hs)
+data(sigmet.idx.hs)
+
+head(kegg.sets.hs, 3)
+```
+
+```{r}
+foldchanges = res$log2FoldChange
+names(foldchanges) = res$entrez
+head(foldchanges)
+```
+
+```{r}
+# Get the results
+keggres = gage(foldchanges, gsets=kegg.sets.hs)
+```
+
+```{r}
+attributes(keggres)
+```
+
+```{r}
+# Look at the first few down (less) pathways
+head(keggres$less)
+```
+
+```{r}
+pathview(gene.data=foldchanges, pathway.id="hsa04110")
+```
+
+![The Differentially Expressed Genes in the Cell Cycle](hsa04110.pathview.png) 
+
+## Gene Ontology (GO) genesets
+
+```{r}
+data(go.sets.hs)
+data(go.subs.hs)
+
+# Focus on Biological Process subset of GO
+gobpsets = go.sets.hs[go.subs.hs$BP]
+
+gobpres = gage(foldchanges, gsets=gobpsets)
+```
+
+```{r}
+head(gobpres$less, 5)
+```
+
+## Reactome analysis online
+
+We need to make a little file of our significant genes that we can upload to the reactome webpage:
+
+```{r}
+sig_genes <- res[res$padj <= 0.05 & !is.na(res$padj), "symbol"]
+print(paste("Total number of significant genes:", length(sig_genes)))
+```
+
+```{r}
+sig_genes[6]
+```
+
+```{r}
+write.table(sig_genes, file="significant_genes.txt", row.names=FALSE, col.names=FALSE, quote=FALSE)
+```
+
+Then, to perform pathway analysis online go to the Reactome website (https://reactome.org/PathwayBrowser/#TOOL=AT). Select “choose file” to upload your significant gene list. Then, select the parameters “Project to Humans”, then click “Analyze”.
+
+![](R-HSA-69278.png)
