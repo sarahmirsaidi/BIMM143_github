@@ -23,7 +23,9 @@ pdbs <- pdbaln(pdb.files, fit = TRUE, exefile="msa")
 ```
 ```{r}
 library(bio3dview)
+```
 
+```{r, eval=FALSE}
 view.pdbs(pdbs)
 ```
 
@@ -184,7 +186,7 @@ aln <- read.fasta(aln_file[1], to.upper = TRUE)
 dim(aln$ali)
 ```
 
-```{r}
+```{r, eval=FALSE}
 sim <- conserv(aln)
 
 plotb3(sim[1:99],
@@ -196,7 +198,7 @@ con <- consensus(aln, cutoff = 0.9)
 con$seq
 ```
 
-```{r}
+```{r, eval=FALSE}
 m1.pdb <- read.pdb(pdb.files[1])
 occ <- vec2resno(c(sim[1:99], sim[1:99]), m1.pdb$atom$resno)
 write.pdb(m1.pdb, o=occ, file="m1_conserv.pdb")
